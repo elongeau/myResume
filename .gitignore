@@ -1,4 +1,6 @@
-reated by http://www.gitignore.io
+#created by http://www.gitignore.io
+
+activator*
 
 ### PlayFramework ###
 # Ignore Play! working directory #
