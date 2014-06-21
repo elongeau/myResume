@@ -9,8 +9,12 @@ object Application extends Controller {
     Ok(views.html.index("hello Play !, no more OutOfMem"))
   }
 
-  def home = Action {
-    Ok("home")
+  def home = Action {request =>
+    Ok(s"got request : $request")
+  }
+
+  def id(id: Long) = Action {
+    Ok(s"get {$id}")
   }
 
 }
