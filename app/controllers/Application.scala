@@ -17,7 +17,7 @@ trait FormController {
   }
 
   def id(id: Long) = Action {
-    Ok(s"get {$id}")
+    Ok(s"get $id")
   }
 
   def userPost() = Action {
