@@ -1,9 +1,9 @@
 import controllers.FormController
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
+import play.api.libs.json.{JsObject, Json}
 import play.api.mvc._
 import play.api.test._
-import scala.concurrent.Future
 
 /**
  * Add your spec here.
@@ -17,12 +17,15 @@ object ApplicationSpec extends PlaySpecification with Results {
 
   "Application" should {
 
-    "respond with 'get 1'" in {
-      val controller = new TestController()
-      val result: Future[Result] = controller.id(1).apply(FakeRequest())
-      val bodyText = contentAsString(result)
-      bodyText must be equalTo "get 1"
-
+    "respond with 'Hi manu your age is 32'" in {
+      implicit val app = FakeApplication()
+      running(app) {
+        val json: JsObject = Json.obj("name" -> "manu", "age" -> 32)
+        val Some(result) = route(FakeRequest(POST, "/userPost", FakeHeaders(), json))
+        status(result) must equalTo(OK)
+        val bodyText = contentAsString(result)
+        bodyText must be equalTo "Hi manu your age is 32"
+      }
     }
   }
 }
