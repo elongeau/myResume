@@ -1,11 +1,22 @@
 package controllers
 
 import play.api.mvc._
-import forms.UserForms
+import forms.UserData
+import play.api.libs.json._
 
+import play.api.libs.functional.syntax._
 
 trait FormController {
   this: Controller =>
+
+  implicit val userWrites: Writes[UserData] = (
+    (JsPath \ "name").write[String] and
+      (JsPath \ "age").write[Int]
+    )(unlift(UserData.unapply))
+
+  implicit val userReads: Reads[UserData] = (
+    (JsPath \ "name").read[String] and
+      (JsPath \ "age").read[Int])(UserData.apply _)
 
   def index = Action {
     Ok(views.html.index("hello Play !, no more OutOfMem"))
@@ -20,11 +31,21 @@ trait FormController {
     Ok(s"get $id")
   }
 
-  def userPost() = Action {
+  def userPost() = Action(BodyParsers.parse.json) {
     implicit request =>
-      val userData = UserForms.userForm.bindFromRequest().get
-      Ok(s"Hi ${userData.name} your age is ${userData.age}")
+      val user = request.body.validate[UserData]
+      user.fold(
+        errors => {
+          BadRequest(Json.obj("status" -> "KO", "message" -> JsError.toFlatJson(errors)))
+        },
+        userData => {
+          Ok(s"Hi ${userData.name} your age is ${userData.age}")
+        }
+      )
+
   }
 }
 
-object Application extends Controller with FormController
+object Application extends Controller with FormController {
+
+}
