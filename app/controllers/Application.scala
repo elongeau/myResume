@@ -1,7 +1,7 @@
 package controllers
 
 import play.api.mvc._
-import forms.UserData
+import forms.{Greet, UserData}
 import play.api.libs.json._
 
 import play.api.libs.functional.syntax._
@@ -9,10 +9,13 @@ import play.api.libs.functional.syntax._
 trait FormController {
   this: Controller =>
 
-  implicit val userWrites: Writes[UserData] = (
+  /*implicit val userWrites: Writes[UserData] = (
     (JsPath \ "name").write[String] and
       (JsPath \ "age").write[Int]
-    )(unlift(UserData.unapply))
+    )(unlift(UserData.unapply))*/
+
+  implicit val greetingSWrites = Json.writes[Greet]
+
 
   implicit val userReads: Reads[UserData] = (
     (JsPath \ "name").read[String] and
@@ -39,7 +42,7 @@ trait FormController {
           BadRequest(Json.obj("status" -> "KO", "message" -> JsError.toFlatJson(errors)))
         },
         userData => {
-          Ok(Json.obj("greetings"->s"Hi ${userData.name} your age is ${userData.age}"))
+          Ok(Json.toJson(Greet(s"Hi ${userData.name} your age is ${userData.age}")))
         }
       )
 
