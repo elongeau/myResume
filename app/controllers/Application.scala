@@ -39,7 +39,7 @@ trait FormController {
           BadRequest(Json.obj("status" -> "KO", "message" -> JsError.toFlatJson(errors)))
         },
         userData => {
-          Ok(s"Hi ${userData.name} your age is ${userData.age}")
+          Ok(Json.obj("greetings"->s"Hi ${userData.name} your age is ${userData.age}"))
         }
       )
 

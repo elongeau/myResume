@@ -17,14 +17,14 @@ object ApplicationSpec extends PlaySpecification with Results {
 
   "Application" should {
 
-    "respond with 'Hi manu your age is 32'" in {
+    """respond with json : {"greetings":"Hi manu your age is 32"}""" in {
       implicit val app = FakeApplication()
       running(app) {
         val json: JsObject = Json.obj("name" -> "manu", "age" -> 32)
         val Some(result) = route(FakeRequest(POST, "/userPost", FakeHeaders(), json))
         status(result) must equalTo(OK)
-        val bodyText = contentAsString(result)
-        bodyText must be equalTo "Hi manu your age is 32"
+        val bodyText = contentAsJson(result)
+        bodyText must be equalTo Json.obj("greetings"->"Hi manu your age is 32")
       }
     }
   }
