@@ -4,22 +4,12 @@ import play.api.mvc._
 import forms.{Greet, UserData}
 import play.api.libs.json._
 
-import play.api.libs.functional.syntax._
 
 trait FormController {
   this: Controller =>
 
-  /*implicit val userWrites: Writes[UserData] = (
-    (JsPath \ "name").write[String] and
-      (JsPath \ "age").write[Int]
-    )(unlift(UserData.unapply))*/
-
   implicit val greetingSWrites = Json.writes[Greet]
-
-
-  implicit val userReads: Reads[UserData] = (
-    (JsPath \ "name").read[String] and
-      (JsPath \ "age").read[Int])(UserData.apply _)
+  implicit val userReads: Reads[UserData] = Json.reads[UserData]
 
   def index = Action {
     Ok(views.html.index("hello Play !, no more OutOfMem"))
@@ -49,6 +39,4 @@ trait FormController {
   }
 }
 
-object Application extends Controller with FormController {
-
-}
+object Application extends Controller with FormController
