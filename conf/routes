@@ -3,9 +3,6 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.home
-GET     /:id                        controllers.Application.id(id: Long)
-POST    /userPost                   controllers.Application.userPost
 GET     /resume/:name                 controllers.ResumeApp.getResume(name: String)
 
 # Map static resources from the /public folder to the /assets URL path
